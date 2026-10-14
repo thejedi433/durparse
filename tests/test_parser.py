@@ -75,6 +75,11 @@ class TestParseToSeconds:
         with pytest.raises(ValueError, match="Invalid duration"):
             parse_to_seconds("abc")
     
+    def test_parse_malformed_duration_raises(self):
+        # This passes regex but fails reconstruction check (line 96)
+        with pytest.raises(ValueError, match="Invalid duration"):
+            parse_to_seconds("1h2")
+    
     def test_parse_unknown_unit_raises(self):
         with pytest.raises(ValueError, match="Unknown unit"):
             parse_to_seconds("1x")
@@ -141,6 +146,12 @@ class TestFormatDuration:
     def test_format_human_zero(self):
         assert format_duration(0) == "0s"
     
+    def test_format_human_years(self):
+        # Test years formatting (line 145)
+        assert format_duration(31557600) == "1y"
+        assert format_duration(63115200) == "2y"
+        assert format_duration(31557600 + 86400) == "1y1d"
+    
     def test_format_negative_raises(self):
         with pytest.raises(ValueError, match="cannot be negative"):
             format_duration(-1)
@@ -152,3 +163,8 @@ class TestFormatDuration:
     def test_format_iso_years(self):
         result = format_duration(31557600, 'iso')
         assert result == "P1Y"
+    
+    def test_format_iso_decimal_seconds(self):
+        # Test decimal seconds in ISO format (line 175)
+        assert format_duration(1.5, 'iso') == "PT1.50S"
+        assert format_duration(30.75, 'iso') == "PT30.75S"
