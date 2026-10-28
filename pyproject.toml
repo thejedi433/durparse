@@ -3,7 +3,7 @@ name = "durparse"
 version = "0.1.0"
 description = "Parse duration strings to seconds and back"
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.10"
 dependencies = []
 
 [project.scripts]
@@ -24,3 +24,9 @@ source = ["durparse"]
 
 [tool.coverage.report]
 exclude_lines = ["pragma: no cover", "if __name__ == .__main__."]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3.5",
+    "pytest-cov>=5.0.0",
+]
